@@ -43,7 +43,7 @@ namespace Models.Migrations
 
                     b.Property<int>("Role");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("Email")
                         .IsRequired();
 
                     b.HasKey("Id");

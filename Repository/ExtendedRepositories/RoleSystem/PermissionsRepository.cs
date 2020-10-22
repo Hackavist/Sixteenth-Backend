@@ -14,7 +14,7 @@ namespace Repository.ExtendedRepositories
         IQueryable<Permission> GetPermissionsOfRole(int RoleId);
 
         IQueryable<Permission> GetPermissionsOfUser(int UserId);
-        IQueryable<Permission> GetPermissionsOfUser(string Username);
+        IQueryable<Permission> GetPermissionsOfUser(string Email);
 
         void AssignPermissionToRole(string Permission, string Role);
         void AssignPermissionToRole(string Permission, int RoleId);
@@ -23,7 +23,7 @@ namespace Repository.ExtendedRepositories
         void RemovePermissionFromRole(string Permission, string roleName);
         void AssignPermissionToRole(int PermisionId, int RoleId);
 
-        bool UserHasPermission(string Username, string Permission);
+        bool UserHasPermission(string Email, string Permission);
         bool UserHasPermission(int UserId, string Permission);
         bool UserHasPermission(int UserId, int PermissionId);
     }
@@ -93,20 +93,20 @@ namespace Repository.ExtendedRepositories
                     where roleUser.UserId == UserId
                     select permissionRole.Permission).Distinct();
         }
-        public IQueryable<Permission> GetPermissionsOfUser(string Username)
+        public IQueryable<Permission> GetPermissionsOfUser(string Email)
         {
             return (from roleUser in UserRoleRepository.GetAll()
                     join permissionRole in RolePermissionRepository.GetAll()
                     on roleUser.RoleId equals permissionRole.RoleId
-                    where roleUser.User.UserName == Username
+                    where roleUser.User.Email == Email
                     select permissionRole.Permission).Distinct();
         }
-        public bool UserHasPermission(string Username, string Permission)
+        public bool UserHasPermission(string Email, string Permission)
         {
             return (from roleUser in UserRoleRepository.GetAll()
                     join permissionRole in RolePermissionRepository.GetAll()
                     on roleUser.RoleId equals permissionRole.RoleId
-                    where roleUser.User.UserName == Username && permissionRole.Permission.Name == Permission
+                    where roleUser.User.Email == Email && permissionRole.Permission.Name == Permission
                     select permissionRole).Any();
         }
         public bool UserHasPermission(int UserId, string Permission)

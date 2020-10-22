@@ -31,7 +31,7 @@ namespace SixteenthApi.Controllers
         /// </summary>
         /// <remarks>
         /// For security reasons, the response doesn't confirm the username existence if the password is wrong.
-        /// The Username and Password combination must be valid
+        /// The Email and Password combination must be valid
         /// </remarks>
         /// <param name="request">User credentials</param>
         /// <response code="404">Invalid username or password</response>
@@ -73,7 +73,7 @@ namespace SixteenthApi.Controllers
         /// </summary>
         /// <param name="request">User credentials</param>
         /// <response code="200">Operation successful</response>
-        /// <response code="409">Username already exists</response>
+        /// <response code="409">Email already exists</response>
         [ProducesResponseType(200, Type = null)]
         [ProducesResponseType(409, Type = null)]
         [HttpPost("Register")]

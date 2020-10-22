@@ -37,7 +37,7 @@ namespace Models.Migrations
                     b.Property<string>("Password")
                         .IsRequired();
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("Email")
                         .IsRequired();
 
                     b.HasKey("Id");

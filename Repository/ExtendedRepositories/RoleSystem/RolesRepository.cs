@@ -60,17 +60,17 @@ namespace Repository.ExtendedRepositories
                    where userRole.UserId == UserId
                    select userRole.Role;
         }
-        public IQueryable<Role> GetRolesOfUser(string Username)
+        public IQueryable<Role> GetRolesOfUser(string Email)
         {
             return from userRole in _userRoleRepository.GetAll()
-                   where userRole.User.UserName == Username
+                   where userRole.User.Email == Email
                    select userRole.Role;
         }
 
-        public bool UserHasRole(string Username, string Role)
+        public bool UserHasRole(string Email, string Role)
         {
             return (from userRole in _userRoleRepository.GetAll()
-                    where userRole.User.UserName == Username && userRole.Role.Name == Role
+                    where userRole.User.Email == Email && userRole.Role.Name == Role
                     select userRole).Any();
         }
         public bool UserHasRole(int UserId, string Role)

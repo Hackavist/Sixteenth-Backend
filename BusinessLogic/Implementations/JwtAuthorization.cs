@@ -1,106 +1,113 @@
-﻿using System.Security.Claims;
-using System.Text;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 using BusinessLogic.Interfaces;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Models.DataModels;
 using Models.Helpers;
-using Services.DTOs;
 using Repository.ExtendedRepositories;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Services.DTOs;
 
 namespace BusinessLogic.Implementations
 {
     public class JwtAuthorization : IAuth
     {
         private readonly IOptions<AppSettings> options;
-        private readonly IUserRepository UserRepository;
-        private readonly IRolesRepository RolesRepository;
-        private readonly IPermissionsRepository PermissionsRepository;
-        private readonly IPasswordManager PasswordManager;
-        public JwtAuthorization(IOptions<AppSettings> options, 
-            IUserRepository UserRepository, IPasswordManager PasswordManager, 
+        private readonly IPasswordManager passwordManager;
+        private readonly IPermissionsRepository permissionsRepository;
+        private readonly IRolesRepository rolesRepository;
+        private readonly IUserRepository userRepository;
+
+        public JwtAuthorization(IOptions<AppSettings> options,
+            IUserRepository UserRepository, IPasswordManager PasswordManager,
             IRolesRepository RolesRepository, IPermissionsRepository PermissionsRepository)
         {
             this.options = options;
-            this.PasswordManager = PasswordManager;
-            this.UserRepository = UserRepository;
-            this.RolesRepository = RolesRepository;
-            this.PermissionsRepository = PermissionsRepository;
+            passwordManager = PasswordManager;
+            userRepository = UserRepository;
+            rolesRepository = RolesRepository;
+            permissionsRepository = PermissionsRepository;
         }
+
+        public User GenerateToken(int UserId)
+        {
+            return GenerateToken(userRepository.Get(UserId));
+        }
+
+        public User Authenticate(UserAuthenticationRequest request)
+        {
+            User user = userRepository.GetUser(request.Email);
+            if (user == null || !passwordManager.ComparePassword(request.Password, user.Password)) return null;
+            if (!user.LoggedIn)
+            {
+                user.LoggedIn = true;
+                userRepository.Update(user);
+            }
+
+            return GenerateToken(user);
+        }
+
+        public void Logout(int UserId)
+        {
+            User user = userRepository.Get(UserId);
+            user.LoggedIn = false;
+            user.LastLogOut = DateTime.UtcNow;
+            userRepository.Update(user);
+        }
+
+        public bool Validate(int UserId, DateTime TokenIssuedDate)
+        {
+            User user = userRepository.Get(UserId);
+            if (user.LoggedIn && (user.LastLogOut == null || TokenIssuedDate > user.LastLogOut)) return true;
+            return false;
+        }
+
         public User GenerateToken(User user)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            byte[] key = Encoding.ASCII.GetBytes(options.Value.Secret);
-            List<Claim> Claims = new List<Claim>
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(options.Value.Secret);
+            var Claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Name, user.Email),
                 new Claim("Id", user.Id.ToString()),
                 new Claim("DateIssued", DateTime.UtcNow.ToString())
             };
-            if(options.Value.ValidateRolesFromToken)
+            if (options.Value.ValidateRolesFromToken)
             {
                 List<Claim> RoleClaims = null, PermissionClaims = null;
                 Task.WaitAll(
                     Task.Run(() =>
                     {
-                        RoleClaims = new List<Claim>(from role in RolesRepository.GetRolesOfUser(user.Id)
-                                                     select new Claim(ClaimTypes.Role, role.Name));
+                        RoleClaims = new List<Claim>(from role in rolesRepository.GetRolesOfUser(user.Id)
+                            select new Claim(ClaimTypes.Role, role.Name));
                     }),
-                    Task.Run(() => 
+                    Task.Run(() =>
                     {
-                        PermissionClaims = new List<Claim>(from permission in PermissionsRepository.GetPermissionsOfUser(user.Id)
-                                                           select new Claim("Permission", permission.Name));
+                        PermissionClaims = new List<Claim>(
+                            from permission in permissionsRepository.GetPermissionsOfUser(user.Id)
+                            select new Claim("Permission", permission.Name));
                     })
                 );
                 Claims.AddRange(RoleClaims);
                 Claims.AddRange(PermissionClaims);
             }
-            var tokenDescriptor = new SecurityTokenDescriptor
+
+            SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(Claims),
                 Expires = DateTime.UtcNow.AddMinutes(options.Value.TokenExpirationMinutes),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature)
             };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
+            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
             user.Token = tokenHandler.WriteToken(token);
             user.Password = null;
             return user;
-        }
-        public User GenerateToken(int UserId)
-        {
-            return GenerateToken(UserRepository.Get(UserId));
-        }
-        public User Authenticate(UserAuthenticationRequest request)
-        {
-            User user = UserRepository.GetUser(request.Username);
-            if (user == null || !PasswordManager.ComparePassword(request.Password, user.Password)) return null;
-            if(!user.LoggedIn)
-            {
-                user.LoggedIn = true;
-                UserRepository.Update(user);
-            }
-            return GenerateToken(user);
-        }
-        public void Logout(int UserId)
-        {
-            User user = UserRepository.Get(UserId);
-            user.LoggedIn = false;
-            user.LastLogOut = DateTime.UtcNow;
-            UserRepository.Update(user);
-        }
-        public bool Validate(int UserId, DateTime TokenIssuedDate)
-        {
-            User user = UserRepository.Get(UserId);
-            if(user.LoggedIn && (user.LastLogOut == null || TokenIssuedDate > user.LastLogOut))
-            {
-                return true;
-            }
-            return false;
         }
     }
 }

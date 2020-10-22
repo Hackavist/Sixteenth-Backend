@@ -7,7 +7,7 @@ namespace Services.Validators
     {
         public UserAuthenticationRequestValidator()
         {
-            RuleFor(u => u.Username).NotEmpty().NotNull();
+            RuleFor(u => u.Email).NotEmpty().NotNull();
             RuleFor(u => u.Password).NotEmpty().NotNull().MinimumLength(8);
         }
     }
