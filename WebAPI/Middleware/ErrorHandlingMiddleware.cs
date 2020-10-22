@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-
-using Newtonsoft.Json;
-
-using System;
+﻿using System;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
-namespace WebAPI.Middleware
+namespace SixteenthApi.Middleware
 {
     public class ErrorHandlingMiddleware
     {

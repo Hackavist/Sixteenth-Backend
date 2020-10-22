@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Models.DataModels;
 using Models.GenericControllerDTOs;
 
-namespace WebAPI.GenericControllerCreator
+namespace SixteenthApi.GenericControllerCreator
 {
     [Route("api/[controller]")]
     [Produces("application/json")]

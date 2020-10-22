@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Services.DTOs;
 using Services.Helpers;
 
-namespace WebAPI.Controllers
+namespace SixteenthApi.Controllers
 {
     [Authorize]
     [Route("/[controller]")]

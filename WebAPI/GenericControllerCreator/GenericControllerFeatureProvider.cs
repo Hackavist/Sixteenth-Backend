@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Models.Helpers;
 
-namespace WebAPI.GenericControllerCreator
+namespace SixteenthApi.GenericControllerCreator
 {
     public class GenericControllerFeatureProvider : IApplicationFeatureProvider<ControllerFeature>
     {
@@ -16,7 +16,7 @@ namespace WebAPI.GenericControllerCreator
                 var typeName = entityType.Item1.Name + "Controller";
 
                 // Check to see if there is a missing controller for this class
-                if (!feature.Controllers.Any(t => t.Name == typeName))
+                if (feature.Controllers.All(t => t.Name != typeName))
                 {
                     // Create a generic controller for this type
                     var controllerType = typeof(GenericController<,,>).MakeGenericType(entityType.Item1, entityType.Item2, entityType.Item3).GetTypeInfo();

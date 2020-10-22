@@ -5,17 +5,17 @@ using Models.DataModels;
 using Repository.ExtendedRepositories;
 using Services.DTOs;
 
-namespace WebAPI.Controllers
+namespace SixteenthApi.Controllers
 {
     [Produces("application/json")]
     [Route("api")]
     [ApiController]
     public class RolesAndPermissionsController : ControllerBase
     {
-        private readonly IRolesAndPermissionsManager RolesAndPermissionsManager;
+        private readonly IRolesAndPermissionsManager rolesAndPermissionsManager;
         public RolesAndPermissionsController(IRolesAndPermissionsManager RolesAndPermissionsManager)
         {
-            this.RolesAndPermissionsManager = RolesAndPermissionsManager;
+            this.rolesAndPermissionsManager = RolesAndPermissionsManager;
         }
         /// <summary>
         /// Get all available roles
@@ -24,7 +24,7 @@ namespace WebAPI.Controllers
         [HttpGet("Roles")]
         public IActionResult GetAllRoles()
         {
-            return Ok(RolesAndPermissionsManager.GetAllRoles());
+            return Ok(rolesAndPermissionsManager.GetAllRoles());
         }
         /// <summary>
         /// Gets the role by it's name or id
@@ -45,8 +45,8 @@ namespace WebAPI.Controllers
         {
             if (roleId != null && !string.IsNullOrEmpty(roleName)) return BadRequest();
             RoleDTO res;
-            if (roleId != null) res = RolesAndPermissionsManager.GetRoleById((int)roleId);
-            else if (!string.IsNullOrEmpty(roleName)) res = RolesAndPermissionsManager.GetRoleByName(roleName);
+            if (roleId != null) res = rolesAndPermissionsManager.GetRoleById((int)roleId);
+            else if (!string.IsNullOrEmpty(roleName)) res = rolesAndPermissionsManager.GetRoleByName(roleName);
             else return BadRequest();
             if (res == null) return BadRequest();
             else return Ok(res);
@@ -65,7 +65,7 @@ namespace WebAPI.Controllers
         public IActionResult InsertRole([FromQuery]string roleName)
         {
             if (string.IsNullOrEmpty(roleName)) return BadRequest();
-            int id = RolesAndPermissionsManager.InsertRole(roleName);
+            int id = rolesAndPermissionsManager.InsertRole(roleName);
             if (id == -1) return BadRequest();
             return Ok(id);
         }
@@ -79,7 +79,7 @@ namespace WebAPI.Controllers
         [HttpDelete("Roles")]
         public IActionResult DeleteRole(int roleId)
         {
-            if (RolesAndPermissionsManager.DeleteRole(roleId))
+            if (rolesAndPermissionsManager.DeleteRole(roleId))
                 return Ok();
             else
                 return BadRequest();
@@ -94,7 +94,7 @@ namespace WebAPI.Controllers
         [HttpPost("Roles/User")]
         public IActionResult AssignRoleToUser(string roleName, int userId)
         {
-            if (RolesAndPermissionsManager.AssignRoleToUser(roleName, userId))
+            if (rolesAndPermissionsManager.AssignRoleToUser(roleName, userId))
                 return Ok();
             else
                 return BadRequest();
@@ -109,7 +109,7 @@ namespace WebAPI.Controllers
         [HttpDelete("Roles/User")]
         public IActionResult RemoveRoleFromUser(string roleName, int userId)
         {
-            if (RolesAndPermissionsManager.RemoveRoleFromUser(roleName, userId))
+            if (rolesAndPermissionsManager.RemoveRoleFromUser(roleName, userId))
                 return Ok();
             else
                 return BadRequest();
@@ -125,7 +125,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                RolesAndPermissionsManager.RegisterRoleToAction(actionName, roleName);
+                rolesAndPermissionsManager.RegisterRoleToAction(actionName, roleName);
                 return Ok();
             }
             catch(RoleAlreadyAssignedException)
@@ -140,7 +140,7 @@ namespace WebAPI.Controllers
         [HttpGet("Roles/Action")]
         public IActionResult GetRolesOfAction(string actionName)
         {
-            return Ok(RolesAndPermissionsManager.GetRolesOfAction(actionName));
+            return Ok(rolesAndPermissionsManager.GetRolesOfAction(actionName));
         }
         /// <summary>
         /// Gets the permissions assigned to an action
@@ -149,7 +149,7 @@ namespace WebAPI.Controllers
         [HttpGet("Permissions/Action")]
         public IActionResult GetPermissionsOfAction(string actionName)
         {
-            return Ok(RolesAndPermissionsManager.GetPermissionsOfAction(actionName));
+            return Ok(rolesAndPermissionsManager.GetPermissionsOfAction(actionName));
         }
         /// <summary>
         /// Removes role from an action
@@ -160,7 +160,7 @@ namespace WebAPI.Controllers
         [HttpDelete("Roles/Action")]
         public IActionResult RemoveRoleFromAction(string roleName, string actionName)
         {
-            if (RolesAndPermissionsManager.RemoveRoleFromAction(actionName, roleName))
+            if (rolesAndPermissionsManager.RemoveRoleFromAction(actionName, roleName))
                 return Ok();
             else
                 return BadRequest();
@@ -172,7 +172,7 @@ namespace WebAPI.Controllers
         [HttpGet("Permissions")]
         public IActionResult GetAllPermissions()
         {
-            return Ok(RolesAndPermissionsManager.GetAllPermissions());
+            return Ok(rolesAndPermissionsManager.GetAllPermissions());
         }
         /// <summary>
         /// Gets the permission by it's name or id
@@ -193,8 +193,8 @@ namespace WebAPI.Controllers
         {
             if (permissionId != null && !string.IsNullOrEmpty(permissionName)) return BadRequest();
             PermissionDTO res;
-            if (permissionId != null) res = RolesAndPermissionsManager.GetPermissionById((int)permissionId);
-            else if (!string.IsNullOrEmpty(permissionName)) res = RolesAndPermissionsManager.GetPermissionByName(permissionName);
+            if (permissionId != null) res = rolesAndPermissionsManager.GetPermissionById((int)permissionId);
+            else if (!string.IsNullOrEmpty(permissionName)) res = rolesAndPermissionsManager.GetPermissionByName(permissionName);
             else return BadRequest();
             if (res == null) return BadRequest();
             else return Ok(res);
@@ -209,7 +209,7 @@ namespace WebAPI.Controllers
         public IActionResult InsertPermission(string permissionName)
         {
             if (permissionName == null) return BadRequest();
-            int Id = RolesAndPermissionsManager.InsertPermission(permissionName);
+            int Id = rolesAndPermissionsManager.InsertPermission(permissionName);
             if (Id == -1)
                 return BadRequest();
             return Ok(Id);
@@ -223,7 +223,7 @@ namespace WebAPI.Controllers
         [HttpDelete("Permissions")]
         public IActionResult DeletePermission(string permission)
         {
-            if (RolesAndPermissionsManager.DeletePermission(permission))
+            if (rolesAndPermissionsManager.DeletePermission(permission))
                 return Ok();
             else
                 return BadRequest();
@@ -237,7 +237,7 @@ namespace WebAPI.Controllers
         [HttpGet("Permissions/Role")]
         public IActionResult GetPermissionsOfRole(string roleName)
         {
-            var res = RolesAndPermissionsManager.GetPermissionsOfRole(roleName);
+            var res = rolesAndPermissionsManager.GetPermissionsOfRole(roleName);
             if (res == null) BadRequest();
             return Ok(res);
         }
@@ -250,7 +250,7 @@ namespace WebAPI.Controllers
         [HttpPost("Permissions/Role")]
         public IActionResult AssignPermissionToRole(string roleName, string permissionName)
         {
-            if (RolesAndPermissionsManager.AssignPermissionToRole(roleName, permissionName))
+            if (rolesAndPermissionsManager.AssignPermissionToRole(roleName, permissionName))
                 return Ok();
             else
                 return BadRequest();
@@ -264,7 +264,7 @@ namespace WebAPI.Controllers
         [HttpDelete("Permissions/Role")]
         public IActionResult RemovePermissionFromRole(string roleName, string permissionName)
         {
-            if (RolesAndPermissionsManager.RemovePermissionFromRole(roleName, permissionName))
+            if (rolesAndPermissionsManager.RemovePermissionFromRole(roleName, permissionName))
                 return Ok();
             else
                 return BadRequest();
@@ -278,7 +278,7 @@ namespace WebAPI.Controllers
         [HttpPost("Permissions/Action")]
         public IActionResult RegisterPermissionToAction(string permissionName, string actionName)
         {
-            if (RolesAndPermissionsManager.RegisterPermissionToAction(actionName, permissionName))
+            if (rolesAndPermissionsManager.RegisterPermissionToAction(actionName, permissionName))
                 return Ok();
             else
                 return BadRequest();
@@ -292,7 +292,7 @@ namespace WebAPI.Controllers
         [HttpDelete("Permissions/Action")]
         public IActionResult RemovePermissionFromAction(string permissionName, string actionName)
         {
-            if (RolesAndPermissionsManager.RemovePermissionFromAction(actionName, permissionName))
+            if (rolesAndPermissionsManager.RemovePermissionFromAction(actionName, permissionName))
                 return Ok();
             else
                 return BadRequest();

@@ -1,10 +1,13 @@
-﻿using BusinessLogic.Implementations;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using BusinessLogic.Implementations;
 using BusinessLogic.Initializers;
 using BusinessLogic.Interfaces;
-
 using FluentValidation;
 using FluentValidation.AspNetCore;
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -17,30 +20,20 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-
 using Models;
 using Models.Helpers;
-
 using Repository;
 using Repository.ExtendedRepositories;
-
 using Services.DTOs;
 using Services.Helpers.MailService;
 using Services.RoleSystem;
 using Services.RoleSystem.Implementations;
 using Services.RoleSystem.Interfaces;
 using Services.Validators;
+using SixteenthApi.GenericControllerCreator;
+using SixteenthApi.Middleware;
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Text;
-
-using WebAPI.GenericControllerCreator;
-using WebAPI.Middleware;
-
-namespace WebAPI
+namespace SixteenthApi
 {
     public class Startup
     {

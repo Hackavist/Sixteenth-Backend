@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using BusinessLogic.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -10,7 +9,7 @@ using Models.Helpers;
 using Services.DTOs;
 using Services.Extensions;
 
-namespace WebAPI.Controllers
+namespace SixteenthApi.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
@@ -18,14 +17,14 @@ namespace WebAPI.Controllers
     [AllowAnonymous]
     public class AccountController : ControllerBase
     {
-        private readonly IAuth Auth;
-        private readonly IAccountLogic AccountLogic;
+        private readonly IAuth auth;
+        private readonly IAccountLogic accountLogic;
         private readonly IOptions<AppSettings> options;
         public AccountController(IOptions<AppSettings> options, IAuth Auth, IAccountLogic AccountLogic)
         {
-            this.Auth = Auth;
+            this.auth = Auth;
             this.options = options;
-            this.AccountLogic = AccountLogic;
+            this.accountLogic = AccountLogic;
         }
         /// <summary>
         /// The only official way to get an access token for this API
@@ -44,7 +43,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                User user = Auth.Authenticate(request);
+                User user = auth.Authenticate(request);
                 if (user == null)
                     return NotFound();
                 return StatusCode(StatusCodes.Status202Accepted, new UserAuthenticationResult(user.Id, user.Token, options.Value.TokenExpirationMinutes));
@@ -66,7 +65,7 @@ namespace WebAPI.Controllers
         [HttpPost("RefreshToken")]
         public IActionResult RefreshToken()
         {
-            User user = Auth.GenerateToken(User.GetId());
+            User user = auth.GenerateToken(User.GetId());
             return Ok(new UserAuthenticationResult(user.Id, user.Token, options.Value.TokenExpirationMinutes));
         }
         /// <summary>
@@ -80,7 +79,7 @@ namespace WebAPI.Controllers
         [HttpPost("Register")]
         public IActionResult Register([FromBody]UserAuthenticationRequest request)
         {
-            if (AccountLogic.Register(request, "User"))
+            if (accountLogic.Register(request, "User"))
                 return Ok();
             return StatusCode(StatusCodes.Status409Conflict);
         }
@@ -97,7 +96,7 @@ namespace WebAPI.Controllers
         [HttpPost("Logout")]
         public IActionResult Logout()
         {
-            Auth.Logout(User.GetId());
+            auth.Logout(User.GetId());
             return Ok();
         }
     }

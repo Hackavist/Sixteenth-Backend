@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
-namespace WebAPI.GenericControllerCreator
+namespace SixteenthApi.GenericControllerCreator
 {
     //used to simplify the controller name in navigation 
     [AttributeUsage(AttributeTargets.Class)]
