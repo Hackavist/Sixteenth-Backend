@@ -8,6 +8,9 @@ namespace Models.DataModels.Core
         public string StreetName { get; set; }
         public Districts District { get; set; }
 
+        public int BranchId { get; set; }
+        public virtual Branch Branch { get; set; }
+
         public override string ToString()
         {
             return $"{StreetName},{District}";

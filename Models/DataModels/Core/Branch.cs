@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models.DataModels.Core
 {
@@ -8,7 +9,9 @@ namespace Models.DataModels.Core
         public string PhoneNumber { get; set; }
         public string BookingLink { get; set; }
         public string SocialLink { get; set; }
+        public int MainPhotoId { get; set; }
 
+        
         public int AddressId { get; set; }
         public virtual Address Address { get; set; }
 

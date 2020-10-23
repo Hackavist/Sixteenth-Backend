@@ -16,6 +16,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
     <PackageReference Include="Linq.Expression.Optimizer" Version="1.0.13" />
     <PackageReference Include="MailKit" Version="2.9.0" />
   </ItemGroup>

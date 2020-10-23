@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using AutoMapper;
 using BusinessLogic.Implementations;
 using BusinessLogic.Initializers;
 using BusinessLogic.Interfaces;
@@ -57,7 +58,7 @@ namespace SixteenthApi
             });
 
             services.AddControllers().AddNewtonsoftJson();
-
+            services.AddAutoMapper(typeof(Startup));
             services.AddMvc(opt =>
                 {
                     opt.Filters.Add(typeof(ValidatorActionFilter));

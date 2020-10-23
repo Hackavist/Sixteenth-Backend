@@ -1,10 +1,13 @@
 ﻿using System;
 using System.IO;
+
 using Microsoft.EntityFrameworkCore;
+
 using Models.DataModels;
 using Models.DataModels.Core;
 using Models.DataModels.RoleSystem;
 using Models.Helpers;
+
 using Newtonsoft.Json;
 
 namespace Models
@@ -40,6 +43,16 @@ namespace Models
             Configure(options);
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Branch>()
+                .HasOne(a => a.Address)
+                .WithOne(b => b.Branch)
+                .HasForeignKey<Address>(a => a.BranchId);
+        }
+
         public static void Configure(DbContextOptionsBuilder options)
         {
             options.UseLazyLoadingProxies();
@@ -49,7 +62,7 @@ namespace Models
                 if (string.IsNullOrWhiteSpace(LocalDatabaseName))
                     LocalDatabaseName = JsonConvert.DeserializeAnonymousType(
                         File.ReadAllText(Path.Combine("..", "WebAPI", "appsettings.json")),
-                        new {AppSettings = new AppSettings()}).AppSettings.LocalDatabaseName;
+                        new { AppSettings = new AppSettings() }).AppSettings.LocalDatabaseName;
                 options.UseNpgsql($"Host=localhost;Port=5432;Database={LocalDatabaseName};Username=user;Password=123");
             }
             else

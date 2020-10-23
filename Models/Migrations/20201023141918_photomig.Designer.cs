@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Models;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -9,9 +10,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Models.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201023141918_photomig")]
+    partial class photomig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,9 +34,6 @@ namespace Models.Migrations
                     b.Property<string>("AddressLink")
                         .HasColumnType("text");
 
-                    b.Property<int>("BranchId")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("timestamp without time zone");
 
@@ -51,9 +50,6 @@ namespace Models.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BranchId")
-                        .IsUnique();
 
                     b.ToTable("Addresses");
                 });
@@ -96,6 +92,8 @@ namespace Models.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
 
                     b.ToTable("Branches");
                 });
@@ -489,11 +487,11 @@ namespace Models.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Models.DataModels.Core.Address", b =>
+            modelBuilder.Entity("Models.DataModels.Core.Branch", b =>
                 {
-                    b.HasOne("Models.DataModels.Core.Branch", "Branch")
-                        .WithOne("Address")
-                        .HasForeignKey("Models.DataModels.Core.Address", "BranchId")
+                    b.HasOne("Models.DataModels.Core.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
