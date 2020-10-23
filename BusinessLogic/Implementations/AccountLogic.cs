@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.Interfaces;
 using Models.DataModels;
 using Repository.ExtendedRepositories;
+using Repository.ExtendedRepositories.RoleSystem;
 using Services.DTOs;
 
 namespace BusinessLogic.Implementations

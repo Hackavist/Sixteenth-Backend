@@ -1,11 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
-using Models;
-using Models.DataModels;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Models.DataModels.RoleSystem;
 
-namespace Repository.ExtendedRepositories
+namespace Repository.ExtendedRepositories.RoleSystem
 {
     public class PermissionAlreadyAssignedException : Exception { }
     public interface IActionPermissionRepository : ICachedRepository<ActionPermission>
@@ -18,17 +17,17 @@ namespace Repository.ExtendedRepositories
     }
     public class ActionPermissionRepository : CachedRepository<ActionPermission>, IActionPermissionRepository
     {
-        private readonly IPermissionsRepository PermissionsRepository;
-        private readonly IActionRolesRepository ActionRoles;
+        private readonly IPermissionsRepository permissionsRepository;
+        private readonly IActionRolesRepository actionRoles;
         public ActionPermissionRepository(ILogger<ActionPermissionRepository> logger, 
             IPermissionsRepository PermissionsRepository, IActionRolesRepository ActionRoles) : base(logger)
         {
-            this.PermissionsRepository = PermissionsRepository;
-            this.ActionRoles = ActionRoles;
+            this.permissionsRepository = PermissionsRepository;
+            this.actionRoles = ActionRoles;
         }
         public Task AssignPermissionToAction(string ActionName, string PermissionName)
         {
-            return AssignPermissionToAction(ActionName, PermissionsRepository.GetPermission(PermissionName).Id);
+            return AssignPermissionToAction(ActionName, permissionsRepository.GetPermission(PermissionName).Id);
         }
         public Task AssignPermissionToAction(string ActionName, int PermissionId)
         {
@@ -56,7 +55,7 @@ namespace Repository.ExtendedRepositories
         }
         public IQueryable<Permission> GetDerivedPermissionOfAction(string ActionName)
         {
-            return ActionRoles.GetAll().Where(u => u.ActionName == ActionName)
+            return actionRoles.GetAll().Where(u => u.ActionName == ActionName)
                                        .SelectMany(u => u.Role.RolePermissions)
                                        .Select(u => u.Permission);
         }

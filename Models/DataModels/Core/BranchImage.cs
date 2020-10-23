@@ -1,6 +1,6 @@
 ﻿namespace Models.DataModels.Core
 {
-    public class BranchImage:BaseModel
+    public class BranchImage : BaseModel
     {
         public string Base64Content { get; set; }
         public string Extension { get; set; }

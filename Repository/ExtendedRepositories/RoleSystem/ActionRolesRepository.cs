@@ -2,10 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Models;
-using Models.DataModels;
+using Models.DataModels.RoleSystem;
 
-namespace Repository.ExtendedRepositories
+namespace Repository.ExtendedRepositories.RoleSystem
 {
     public class RoleAlreadyAssignedException : Exception { }
     public interface IActionRolesRepository : ICachedRepository<ActionRole>
@@ -18,16 +17,16 @@ namespace Repository.ExtendedRepositories
 
     public class ActionRolesRepository : CachedRepository<ActionRole>, IActionRolesRepository
     {
-        private readonly IRolesRepository RolesRepository;
+        private readonly IRolesRepository rolesRepository;
 
         public ActionRolesRepository(ILogger<ActionRolesRepository> logger, IRolesRepository RolesRepository) : base(logger)
         {
-            this.RolesRepository = RolesRepository;
+            this.rolesRepository = RolesRepository;
         }
 
         public Task AssignRoleToAction(string ActionName, string RoleName)
         {
-            return AssignRoleToAction(ActionName, RolesRepository.GetRole(RoleName).Id);
+            return AssignRoleToAction(ActionName, rolesRepository.GetRole(RoleName).Id);
         }
 
         public Task AssignRoleToAction(string ActionName, int RoleId)

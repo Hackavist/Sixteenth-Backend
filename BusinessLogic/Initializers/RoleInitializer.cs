@@ -2,32 +2,34 @@
 using System.Linq;
 using Models.DataModels;
 using System.Threading.Tasks;
+using Models.DataModels.RoleSystem;
+using Repository.ExtendedRepositories.RoleSystem;
 
 namespace BusinessLogic.Initializers
 {
     public class RoleInitializer : BaseInitializer
     {
-        private readonly IRolesRepository RoleRepository;
-        private readonly IPermissionsRepository PermissionsRepository;
+        private readonly IRolesRepository roleRepository;
+        private readonly IPermissionsRepository permissionsRepository;
         public RoleInitializer(IRolesRepository RoleRepository, IPermissionsRepository PermissionsRepository)
         {
-            this.RoleRepository = RoleRepository;
-            this.PermissionsRepository = PermissionsRepository;
+            this.roleRepository = RoleRepository;
+            this.permissionsRepository = PermissionsRepository;
         }
         public override void Initialize()
         {
-            if (!RoleRepository.GetAll().Any())
+            if (!roleRepository.GetAll().Any())
             {
-                RoleRepository.Insert(new Role { Name = "User" });
+                roleRepository.Insert(new Role { Name = "User" });
                 Role admin = new Role { Name = "Admin" };
-                RoleRepository.Insert(admin).Wait();
-                if (!PermissionsRepository.GetAll().Where(u => u.Name == "CanManageRoles").Any())
+                roleRepository.Insert(admin).Wait();
+                if (!permissionsRepository.GetAll().Any(u => u.Name == "CanManageRoles"))
                 {
-                    PermissionsRepository.Insert(new Permission { Name = "CanManageRoles" }).Wait();
+                    permissionsRepository.Insert(new Permission { Name = "CanManageRoles" }).Wait();
                 }
-                foreach (int PermissionId in PermissionsRepository.GetAll().Select(u => u.Id).ToList())
+                foreach (int permissionId in permissionsRepository.GetAll().Select(u => u.Id).ToList())
                 {
-                    PermissionsRepository.AssignPermissionToRole(PermissionId, admin.Id);
+                    permissionsRepository.AssignPermissionToRole(permissionId, admin.Id);
                 }
             }
         }

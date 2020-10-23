@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Repository.ExtendedRepositories;
+using Repository.ExtendedRepositories.RoleSystem;
 using Services.RoleSystem.Interfaces;
 
 namespace Services.RoleSystem.Implementations

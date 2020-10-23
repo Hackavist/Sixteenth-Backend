@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Services.Extensions;
 using System.Linq;
 using Repository.ExtendedRepositories;
+using Repository.ExtendedRepositories.RoleSystem;
 using Services.RoleSystem.Interfaces;
 
 namespace Services.RoleSystem.Implementations

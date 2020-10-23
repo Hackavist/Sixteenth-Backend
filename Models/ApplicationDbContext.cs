@@ -2,6 +2,7 @@
 using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Models.DataModels;
+using Models.DataModels.RoleSystem;
 using Models.Helpers;
 using Newtonsoft.Json;
 

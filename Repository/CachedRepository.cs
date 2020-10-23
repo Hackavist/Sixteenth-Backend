@@ -11,21 +11,14 @@ namespace Repository
 {
     public class CachedRepository<T> : Repository<T>, ICachedRepository<T> where T : BaseModel
     {
-        static private ApplicationDbContext _db = null;
-        static private ApplicationDbContext db 
+        private static ApplicationDbContext db = null;
+        private static ApplicationDbContext Db 
         {
-            get
-            {
-                if(_db == null)
-                {
-                    _db = new ApplicationDbContext();
-                }
-                return _db;
-            }
+            get { return db ??= new ApplicationDbContext(); }
         }
-        public CachedRepository(ILogger<CachedRepository<T>> logger) : base(db, logger) { }
+        public CachedRepository(ILogger<CachedRepository<T>> logger) : base(Db, logger) { }
         private static Dictionary<int, T> cache;
-        private readonly static object cacheLock = new object();
+        private static readonly object cacheLock = new object();
         private Dictionary<int, T> Cache
         {
             get

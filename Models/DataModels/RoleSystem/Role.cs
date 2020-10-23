@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Models.DataModels
+namespace Models.DataModels.RoleSystem
 {
     public class Role : BaseModel
     {

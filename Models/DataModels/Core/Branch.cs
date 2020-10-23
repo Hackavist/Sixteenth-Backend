@@ -15,6 +15,5 @@ namespace Models.DataModels.Core
         public virtual ICollection<MenuItem> MenuItems { get; set; }
         public virtual ICollection<News> Offers { get; set; }
         public virtual ICollection<BranchImage> BranchImages { get; set; }
-
     }
 }

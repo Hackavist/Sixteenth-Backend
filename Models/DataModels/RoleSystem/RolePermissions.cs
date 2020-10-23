@@ -1,4 +1,4 @@
-﻿namespace Models.DataModels
+﻿namespace Models.DataModels.RoleSystem
 {
     public class RolePermission : BaseModel
     {

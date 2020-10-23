@@ -24,6 +24,7 @@ using Models;
 using Models.Helpers;
 using Repository;
 using Repository.ExtendedRepositories;
+using Repository.ExtendedRepositories.RoleSystem;
 using Services.DTOs;
 using Services.Helpers.MailService;
 using Services.RoleSystem;
@@ -37,12 +38,12 @@ namespace SixteenthApi
 {
     public class Startup
     {
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
 
         public Startup(IConfiguration configuration, ILogger<Startup> logger)
         {
             Configuration = configuration;
-            _logger = logger;
+            this.logger = logger;
         }
 
         public IConfiguration Configuration { get; }
