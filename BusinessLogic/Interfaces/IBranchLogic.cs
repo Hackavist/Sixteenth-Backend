@@ -6,7 +6,7 @@ namespace BusinessLogic.Interfaces
 {
     public interface IBranchLogic
     {
-        IQueryable<BranchResponseDTO> GetAll();
+        IEnumerable<BranchResponseDTO> GetAll();
         BranchResponseDTO Get(int id);
         int Insert(BranchRequestDTO entity);
         IEnumerable<int> InsertRange(IEnumerable<BranchRequestDTO> entities);

@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+
 using AutoMapper;
+
 using BusinessLogic.Implementations;
 using BusinessLogic.Initializers;
 using BusinessLogic.Interfaces;
+
 using FluentValidation;
 using FluentValidation.AspNetCore;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -21,17 +25,22 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+
 using Models;
 using Models.Helpers;
+
 using Repository;
 using Repository.ExtendedRepositories;
 using Repository.ExtendedRepositories.RoleSystem;
+
 using Services.DTOs;
 using Services.Helpers.MailService;
+using Services.MappingProfiles;
 using Services.RoleSystem;
 using Services.RoleSystem.Implementations;
 using Services.RoleSystem.Interfaces;
 using Services.Validators;
+
 using SixteenthApi.GenericControllerCreator;
 using SixteenthApi.Middleware;
 
@@ -96,7 +105,7 @@ namespace SixteenthApi
             services.AddAuthorization(options =>
             {
                 options.DefaultPolicy = new AuthorizationPolicy(
-                    new IAuthorizationRequirement[] {new AccountRequirement()},
+                    new IAuthorizationRequirement[] { new AccountRequirement() },
                     options.DefaultPolicy.AuthenticationSchemes
                 );
             });
@@ -108,7 +117,7 @@ namespace SixteenthApi
                     Version = "v1",
                     Title = appSettings.SiteData.Name,
                     Description = appSettings.SiteData.APIDescription,
-                    Contact = new OpenApiContact {Name = appSettings.Contact.Name, Email = appSettings.Contact.Email}
+                    Contact = new OpenApiContact { Name = appSettings.Contact.Name, Email = appSettings.Contact.Email }
                 });
                 c.AddSecurityDefinition("Bearer",
                     new OpenApiSecurityScheme
@@ -156,9 +165,12 @@ namespace SixteenthApi
             services.AddScoped<IActionPermissionRepository, ActionPermissionRepository>();
             services.AddScoped<IActionRolesRepository, ActionRolesRepository>();
             services.AddScoped<IActionRoleManager, ActionRoleManager>();
+            services.AddScoped<IBranchPhotosRepository, BranchImagesRepository>();
+            services.AddScoped<IAddressRepository, AddressRepository>();
 
             services.AddTransient<IAuth, JwtAuthorization>();
             services.AddTransient<IAccountLogic, AccountLogic>();
+            services.AddTransient<IBranchLogic, BranchLogic>();
             services.AddTransient<IValidator<UserRegistrationDTO>, UserRegistrationRequestValidator>();
             services.AddTransient<IValidator<UserAuthenticationRequest>, UserAuthenticationRequestValidator>();
             services.AddTransient<IMailService, SmtpMailService>();
@@ -167,6 +179,13 @@ namespace SixteenthApi
 
             services.AddSingleton<IPasswordManager, RFC2898PasswordManager>();
 
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
 
             if (appSettings.ValidateRolesFromToken) services.AddSingleton<IRoleValidator, TokenRoleValidator>();
             else services.AddScoped<IRoleValidator, DbRoleValidator>();

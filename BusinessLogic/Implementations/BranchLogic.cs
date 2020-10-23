@@ -1,14 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-
 using AutoMapper;
-
 using BusinessLogic.Interfaces;
-
 using Models.DataModels.Core;
-
 using Repository;
-
 using Services.DTOs;
 using Services.Helpers;
 
@@ -25,9 +20,9 @@ namespace BusinessLogic.Implementations
             this.branchRepository = branchRepository;
         }
 
-        public IQueryable<BranchResponseDTO> GetAll()
+        public IEnumerable<BranchResponseDTO> GetAll()
         {
-            return mapper.Map<IQueryable<Branch>, IQueryable<BranchResponseDTO>>(branchRepository.GetAll());
+            return mapper.Map<IEnumerable<Branch>, IEnumerable<BranchResponseDTO>>(branchRepository.GetAll().ToList());
         }
 
         public BranchResponseDTO Get(int id)
