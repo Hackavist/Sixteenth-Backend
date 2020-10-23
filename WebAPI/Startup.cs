@@ -38,6 +38,7 @@ namespace SixteenthApi
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
         private readonly ILogger logger;
 
         public Startup(IConfiguration configuration, ILogger<Startup> logger)
@@ -45,8 +46,6 @@ namespace SixteenthApi
             Configuration = configuration;
             this.logger = logger;
         }
-
-        public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -68,9 +67,9 @@ namespace SixteenthApi
                 .AddFluentValidation()
                 .ConfigureApplicationPartManager(p => p.FeatureProviders.Add(new GenericControllerFeatureProvider()));
 
-            var appSettingsSection = Configuration.GetSection("AppSettings");
+            IConfigurationSection appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
-            var appSettings = appSettingsSection.Get<AppSettings>();
+            AppSettings appSettings = appSettingsSection.Get<AppSettings>();
             ApplicationDbContext.LocalDatabaseName = appSettings.LocalDatabaseName;
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
             services.AddDbContext<ApplicationDbContext>(ApplicationDbContext.Configure);
@@ -138,8 +137,8 @@ namespace SixteenthApi
                     }
                 });
 
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                string xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                string xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
 
@@ -159,6 +158,7 @@ namespace SixteenthApi
 
             services.AddTransient<IAuth, JwtAuthorization>();
             services.AddTransient<IAccountLogic, AccountLogic>();
+            services.AddTransient<IValidator<UserRegistrationDTO>, UserRegistrationRequestValidator>();
             services.AddTransient<IValidator<UserAuthenticationRequest>, UserAuthenticationRequestValidator>();
             services.AddTransient<IMailService, SmtpMailService>();
             services.AddTransient<IRolesAndPermissionsManager, RolesAndPermissionsManager>();

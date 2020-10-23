@@ -1,32 +1,54 @@
-﻿using BusinessLogic.Interfaces;
+﻿using System;
+
+using BusinessLogic.Interfaces;
+
 using Models.DataModels;
+using Models.DataModels.Core;
+using Models.Enums;
+
+using Repository;
 using Repository.ExtendedRepositories;
 using Repository.ExtendedRepositories.RoleSystem;
+
 using Services.DTOs;
 
 namespace BusinessLogic.Implementations
 {
     public class AccountLogic : IAccountLogic
     {
-        private readonly IUserRepository UserRepository;
-        private readonly IRolesRepository RolesRepository;
-        private readonly IPasswordManager PasswordManager;
-        public AccountLogic(IUserRepository UserRepository, IRolesRepository RolesRepository, IPasswordManager PasswordManager)
+        private readonly IRepository<Customer> customerRepository;
+        private readonly IPasswordManager passwordManager;
+        private readonly IRolesRepository rolesRepository;
+        private readonly IUserRepository userRepository;
+
+        public AccountLogic(IUserRepository UserRepository, IRolesRepository RolesRepository,
+            IPasswordManager PasswordManager, IRepository<Customer> customerRepository)
         {
-            this.UserRepository = UserRepository;
-            this.RolesRepository = RolesRepository;
-            this.PasswordManager = PasswordManager;
+            userRepository = UserRepository;
+            rolesRepository = RolesRepository;
+            passwordManager = PasswordManager;
+            this.customerRepository = customerRepository;
         }
-        public bool Register(UserAuthenticationRequest request, string Role)
+
+        public bool Register(UserRegistrationDTO request, string Role)
         {
-            if (UserRepository.CheckEmailExists(request.Email.ToLower())) return false;
+            if (userRepository.CheckEmailExists(request.Email.ToLower())) return false;
             User u = new User
             {
                 Email = request.Email.ToLower(),
-                Password = PasswordManager.HashPassword(request.Password)
+                Password = passwordManager.HashPassword(request.Password)
             };
-            UserRepository.Insert(u).Wait();
-            RolesRepository.AssignRoleToUser(Role, u.Id);
+            userRepository.Insert(u).Wait();
+            rolesRepository.AssignRoleToUser(Role, u.Id);
+            Customer customer = new Customer { Name = request.Name };
+
+            if (Enum.TryParse(typeof(Districts), request.District, false, out object? district) && district != null)
+                customer.Residence = (Districts)district;
+            else
+                customer.Residence = Districts.Ryad;
+
+            customer.UserId = u.Id;
+            customerRepository.Insert(customer);
             return true;
         }
     }

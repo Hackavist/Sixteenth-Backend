@@ -4,6 +4,6 @@ namespace BusinessLogic.Interfaces
 {
     public interface IAccountLogic
     {
-        bool Register(UserAuthenticationRequest request, string Role);
+        bool Register(UserRegistrationDTO request, string Role);
     }
 }

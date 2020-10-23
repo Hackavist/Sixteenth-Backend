@@ -1,13 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-
-using Models;
-using Models.DataModels;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Models;
+using Models.DataModels;
 
 namespace Repository
 {
@@ -29,11 +27,11 @@ namespace Repository
             return from row in Entities
                 where !row.IsDeleted
                 select row;
-        }   
+        }
 
         public virtual T Get(int id)
         {
-            var result = GetAll().Where(e => e.Id == id).FirstOrDefault();
+            T result = GetAll().Where(e => e.Id == id).FirstOrDefault();
             return result;
         }
 
@@ -53,7 +51,7 @@ namespace Repository
             if (!Entities.Any())
                 throw new ArgumentNullException(nameof(Entities), "The Inserted Entites are Null");
 
-            foreach (var item in Entities) item.AddedDate = DateTime.UtcNow;
+            foreach (T item in Entities) item.AddedDate = DateTime.UtcNow;
 
             await this.Entities.AddRangeAsync(Entities.ToArray());
             SaveChanges();
@@ -74,9 +72,9 @@ namespace Repository
         public virtual void UpdateRange(IEnumerable<T> Entities)
         {
             if (!Entities.Any())
-                throw new ArgumentNullException(nameof(Entities), "Upadted Entites are Null");
+                throw new ArgumentNullException(nameof(Entities), "Updated Entites are Null");
 
-            foreach (var item in Entities) item.ModifiedDate = DateTime.UtcNow;
+            foreach (T item in Entities) item.ModifiedDate = DateTime.UtcNow;
             this.Entities.UpdateRange(Entities.ToArray());
             SaveChanges();
             Logger.LogInformation($"{Entities.GetType()} are updated in Database");
@@ -98,7 +96,7 @@ namespace Repository
             if (!Entities.Any())
                 throw new ArgumentNullException(nameof(Entities), "The Deleted Entites are Null");
 
-            foreach (var item in Entities)
+            foreach (T item in Entities)
             {
                 item.IsDeleted = true;
                 item.DeletedDate = DateTime.UtcNow;

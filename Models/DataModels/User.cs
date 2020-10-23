@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Models.DataModels.Core;
 using Models.DataModels.RoleSystem;
 
 namespace Models.DataModels
@@ -18,5 +19,6 @@ namespace Models.DataModels
         [NotMapped] public string Token { get; set; }
 
         public virtual ICollection<UserRole> UserRoles { get; set; }
+        public virtual Customer Customer { get; set; }
     }
 }

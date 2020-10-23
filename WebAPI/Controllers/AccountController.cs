@@ -77,7 +77,7 @@ namespace SixteenthApi.Controllers
         [ProducesResponseType(200, Type = null)]
         [ProducesResponseType(409, Type = null)]
         [HttpPost("Register")]
-        public IActionResult Register([FromBody]UserAuthenticationRequest request)
+        public IActionResult Register([FromBody]UserRegistrationDTO request)
         {
             if (accountLogic.Register(request, "User"))
                 return Ok();

@@ -2,6 +2,7 @@
 using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Models.DataModels;
+using Models.DataModels.Core;
 using Models.DataModels.RoleSystem;
 using Models.Helpers;
 using Newtonsoft.Json;
@@ -18,6 +19,13 @@ namespace Models
         public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<ActionRole> ActionRoles { get; set; }
         public DbSet<ActionPermission> ActionPermissions { get; set; }
+
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<Branch> Branches { get; set; }
+        public DbSet<BranchImage> BranchImages { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<MenuItem> MenuItems { get; set; }
+        public DbSet<News> News { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
