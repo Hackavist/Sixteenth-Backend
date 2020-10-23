@@ -41,7 +41,7 @@ namespace BusinessLogic.Implementations
 
         public User Authenticate(UserAuthenticationRequest request)
         {
-            User user = userRepository.GetUser(request.Email);
+            User user = userRepository.GetUser(request.Email.ToLower());
             if (user == null || !passwordManager.ComparePassword(request.Password, user.Password)) return null;
             if (!user.LoggedIn)
             {
@@ -73,7 +73,7 @@ namespace BusinessLogic.Implementations
             var key = Encoding.ASCII.GetBytes(options.Value.Secret);
             var Claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Email),
+                new Claim(ClaimTypes.Name, user.Email.ToLower()),
                 new Claim("Id", user.Id.ToString()),
                 new Claim("DateIssued", DateTime.UtcNow.ToString())
             };

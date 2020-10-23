@@ -29,7 +29,7 @@ namespace Repository
             return from row in Entities
                 where !row.IsDeleted
                 select row;
-        }
+        }   
 
         public virtual T Get(int id)
         {

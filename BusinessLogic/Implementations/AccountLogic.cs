@@ -18,10 +18,10 @@ namespace BusinessLogic.Implementations
         }
         public bool Register(UserAuthenticationRequest request, string Role)
         {
-            if (UserRepository.CheckEmailExists(request.Email)) return false;
+            if (UserRepository.CheckEmailExists(request.Email.ToLower())) return false;
             User u = new User
             {
-                Email = request.Email,
+                Email = request.Email.ToLower(),
                 Password = PasswordManager.HashPassword(request.Password)
             };
             UserRepository.Insert(u).Wait();
