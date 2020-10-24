@@ -15,7 +15,8 @@ namespace Services.DTOs
 
         public DateTime? ModifiedDate { get; set; }
     }
-    public class BranchRequestDTO : BaseDTO
+
+    public class BranchRequestDTO
     {
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
