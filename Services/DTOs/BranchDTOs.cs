@@ -22,5 +22,8 @@ namespace Services.DTOs
         public string PhoneNumber { get; set; }
         public string BookingLink { get; set; }
         public string SocialLink { get; set; }
+        public string AddressLink { get; set; }
+        public string StreetName { get; set; }
+        public string District { get; set; }
     }
 }
