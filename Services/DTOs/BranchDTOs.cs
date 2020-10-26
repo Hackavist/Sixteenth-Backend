@@ -2,7 +2,7 @@
 
 namespace Services.DTOs
 {
-    public class BranchResponseDTO : BaseDTO
+    public class BranchResponseDTO : ResponseBaseDTO
     {
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
@@ -11,9 +11,6 @@ namespace Services.DTOs
         public string AddressText { get; set; }
         public string AddressLink { get; set; }
         public int MainPhotoId { get; set; }
-        public DateTime AddedDate { get; set; }
-
-        public DateTime? ModifiedDate { get; set; }
     }
 
     public class BranchRequestDTO

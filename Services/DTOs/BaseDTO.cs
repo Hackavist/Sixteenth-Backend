@@ -1,10 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Services.DTOs
 {
-    public class BaseDTO
+    public class ResponseBaseDTO
     {
-        public int Id { get; set; }
+        public int Id { get; set; }       
+
+        public DateTime AddedDate { get; set; }
+
+        public DateTime? ModifiedDate { get; set; }
     }
 
     public class PagedResult<T>
