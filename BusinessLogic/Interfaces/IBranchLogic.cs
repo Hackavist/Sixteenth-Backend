@@ -13,9 +13,9 @@ namespace BusinessLogic.Interfaces
         void Update(int branchId,BranchRequestDTO entity);
         void SoftDelete(int id);
         void UpdateAddressOfBranch(int branchId, AddressRequestDTO newAddress);
-
         IQueryable<BranchImageDTO> GetAllImagesOfBranch(int BranchId);
         bool CheckIfImageForBranchExist(int imageId, int branchId);
         BranchImageDTO GetBranchMainImage(int branchId);
+        void DeleteBranchImage(int BranchId, int ImageId);
     }
 }

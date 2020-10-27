@@ -101,5 +101,11 @@ namespace BusinessLogic.Implementations
                 ? mapper.Map<BranchImage, BranchImageDTO>(photosRepository.GetBranchImage(imageId, branchId))
                 : throw new KeyNotFoundException($"Image with BranchId {branchId} and iamge Id {imageId} is not found");
         }
+
+        public void DeleteBranchImage(int BranchId, int ImageId)
+        {
+            var entity = photosRepository.GetBranchImage(ImageId, BranchId);
+            photosRepository.SoftDelete(entity;
+        }
     }
 }
