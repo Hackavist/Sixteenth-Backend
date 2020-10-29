@@ -105,7 +105,7 @@ namespace BusinessLogic.Implementations
         public void DeleteBranchImage(int BranchId, int ImageId)
         {
             var entity = photosRepository.GetBranchImage(ImageId, BranchId);
-            photosRepository.SoftDelete(entity;
+            photosRepository.SoftDelete(entity);
         }
     }
 }

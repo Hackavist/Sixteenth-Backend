@@ -17,7 +17,6 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-
     "SixteenthApi": {
       "commandName": "Project",
       "launchBrowser": true,
@@ -26,6 +25,5 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
-
   }
 }
