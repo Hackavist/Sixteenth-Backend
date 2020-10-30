@@ -25,7 +25,7 @@ namespace SixteenthApi.Controllers
         [HttpGet]
         public IActionResult GetBranches()
         {
-            return Ok(branchLogic.GetAll().ToList());
+            return Ok(branchLogic.GetAll());
         }
 
         /// <summary>
@@ -82,8 +82,8 @@ namespace SixteenthApi.Controllers
         ///     Inserts some new branches and returns Their Ids
         /// </summary>
         /// <param name="branches">The Branch Request Objects</param>
-        /// <response code="200">Successfully Inserted the branches, Returns The Branch Ids</response>
-        /// <response code="400">Error inserting the branch, please make sure that the data is correct</response>
+        /// <response code="200">Successfully Inserted the branches, Returns The Branches Ids</response>
+        /// <response code="400">Error inserting the branches, please make sure that the data is correct</response>
         [ProducesResponseType(201, Type = typeof(IEnumerable<int>))]
         [ProducesResponseType(400, Type = null)]
         [HttpPost("Range")]
